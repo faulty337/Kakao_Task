@@ -17,9 +17,9 @@ CREATE TABLE Users
 CREATE TABLE Point
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    amount     BIGINT   DEFAULT 0,
-    created_at DATETIME DEFAULT NOW(),
-    users_id    BIGINT NOT NULL,
+    amount     BIGINT DEFAULT 0 NOT NULL,
+    created_at DATETIME         NOT NULL,
+    users_id   BIGINT           NOT NULL,
     FOREIGN KEY (users_id) REFERENCES Users (id)
 );
 
@@ -27,8 +27,8 @@ CREATE TABLE Orders
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT,
     price      BIGINT   DEFAULT 0,
-    created_at DATETIME DEFAULT NOW(),
-    users_id    BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    users_id   BIGINT NOT NULL,
     menu_id    BIGINT NOT NULL,
     FOREIGN KEY (users_id) REFERENCES Users (id),
     FOREIGN KEY (menu_id) REFERENCES Menu (id)
@@ -36,8 +36,8 @@ CREATE TABLE Orders
 
 CREATE TABLE Rank
 (
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    price     BIGINT   DEFAULT 0,
-    name VARCHAR(2) DEFAULT NOW(),
-    category    BIGINT NOT NULL
+    id       BIGINT PRIMARY KEY AUTO_INCREMENT,
+    price    BIGINT     DEFAULT 0,
+    name     VARCHAR(2) DEFAULT NOW(),
+    category BIGINT NOT NULL
 );
