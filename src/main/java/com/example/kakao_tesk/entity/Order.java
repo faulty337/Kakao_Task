@@ -5,11 +5,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Entity
-public class Orders {
+@Table(name = "orders")
+@NoArgsConstructor
+@Getter
+public class Order extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +22,15 @@ public class Orders {
 
     private Integer price;
 
-    private LocalDateTime createdAt;
-
-
-    private Long usersId;
+    @ManyToOne
+    private User user;
 
     @ManyToOne
     private Menu menu;
+
+    public Order(Integer price, User user, Menu menu) {
+        this.price = price;
+        this.user = user;
+        this.menu = menu;
+    }
 }
