@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuController {
 
-    final private MenuService menuService;
+    private final MenuService menuService;
 
     @GetMapping()
     public ResponseEntity getMenu(@RequestParam(defaultValue = "") String category){
@@ -30,3 +30,4 @@ public class MenuController {
     }
 
 }
+

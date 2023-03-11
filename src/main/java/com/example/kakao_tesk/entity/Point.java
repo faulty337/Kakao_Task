@@ -1,5 +1,6 @@
 package com.example.kakao_tesk.entity;
 
+import com.example.kakao_tesk.type.PointType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,11 +22,15 @@ public class Point extends TimeStamped{
 
     private Long amount;
 
+    private PointType status;
+
     @ManyToOne
     private User user;
 
-    public Point(Long amount, User user) {
+
+    public Point(Long amount, PointType status, User user) {
         this.amount = amount;
+        this.status = status;
         this.user = user;
     }
 }
