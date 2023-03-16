@@ -5,12 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-public class Rank {
+@Getter
+@NoArgsConstructor
+public class Rank extends TimeStamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +24,12 @@ public class Rank {
 
     private String name;
 
-    private LocalDateTime createdAt;
 
     private Category category;
+
+    public Rank(Integer price, String name, Category category) {
+        this.price = price;
+        this.name = name;
+        this.category = category;
+    }
 }

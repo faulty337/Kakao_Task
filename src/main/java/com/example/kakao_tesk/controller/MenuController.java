@@ -31,5 +31,14 @@ public class MenuController {
         return new ResponseEntity(responseMessage, HttpStatusCode.valueOf(responseMessage.getStatusCode()));
     }
 
+    @Operation(summary = "인기메뉴 조회 API", description = "7일간의 인기 메뉴를 조회합니다.", tags = { "MenuController" })
+    @GetMapping("/rank")
+    public ResponseEntity getRank(){
+        List<MenuResponse> menuResponseList = menuService.getRank();
+        ResponseMessage responseMessage = new ResponseMessage(200, "인기메뉴 메뉴 반환", menuResponseList);
+        return new ResponseEntity(responseMessage, HttpStatusCode.valueOf(responseMessage.getStatusCode()));
+    }
+
+
 }
 
