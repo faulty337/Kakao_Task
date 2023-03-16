@@ -4,6 +4,7 @@ import com.example.kakao_tesk.dto.response.MenuResponse;
 import com.example.kakao_tesk.dto.response.ResponseMessage;
 import com.example.kakao_tesk.service.MenuService;
 import com.example.kakao_tesk.type.Category;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class MenuController {
 
     private final MenuService menuService;
 
+    @Operation(summary = "메뉴 조회 API", description = "카페 메뉴에 대한 정보를 반환합니다.", tags = { "MenuController" })
     @GetMapping()
     public ResponseEntity getMenu(@RequestParam(defaultValue = "") String category){
         List<MenuResponse> menuResponseList = menuService.getMenu(category);
