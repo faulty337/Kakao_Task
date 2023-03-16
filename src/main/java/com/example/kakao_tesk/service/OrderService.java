@@ -36,6 +36,10 @@ public class OrderService {
                 () -> new CustomException(ErrorCode.NOT_FOUND_MENU)
         );
 
+        if(user.getTotalPoint() < menu.getPrice()){
+            throw new CustomException(ErrorCode.SHORTAGE_POINT);
+        }
+
         Order order = orderRepository.save(new Order(menu.getPrice(), user, menu));
 
         PointRequest pointRequest = new PointRequest(user.getId(), (long)menu.getPrice());
