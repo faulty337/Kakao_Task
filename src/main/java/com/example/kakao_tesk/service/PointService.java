@@ -10,6 +10,8 @@ import com.example.kakao_tesk.repository.UserRepository;
 import com.example.kakao_tesk.type.PointType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +19,20 @@ public class PointService {
     private final PointRepository pointRepository;
     private final UserRepository userRepository;
 
-    public void addPointHistory(PointRequest pointRequest, PointType pointType){
+
+    @Transactional
+    public void payment(PointRequest pointRequest, PointType pointType){
         User user = userRepository.findById(pointRequest.getUserId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
         );
 
         pointRepository.save(new Point(pointRequest.getAmount()*pointType.getStatus(), pointType, user));
 
-        user.updatePoint(pointRequest.getAmount()*pointType.getStatus());
+        user.addPoint(pointRequest.getAmount()*pointType.getStatus());
 
     }
+
+
 
 
 
