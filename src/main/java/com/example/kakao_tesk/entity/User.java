@@ -1,13 +1,13 @@
 package com.example.kakao_tesk.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -18,10 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ColumnDefault("0")
-    private Long totalPoint;
+    private Long totalPoint = 0L;
 
-    public void updatePoint(Long amount) {
+    public void addPoint(Long amount) {
         this.totalPoint += amount;
     }
 

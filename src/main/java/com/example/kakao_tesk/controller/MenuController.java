@@ -3,10 +3,8 @@ package com.example.kakao_tesk.controller;
 import com.example.kakao_tesk.dto.response.MenuResponse;
 import com.example.kakao_tesk.dto.response.ResponseMessage;
 import com.example.kakao_tesk.service.MenuService;
-import com.example.kakao_tesk.type.Category;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,20 +21,18 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @Operation(summary = "메뉴 조회 API", description = "카페 메뉴에 대한 정보를 반환합니다.", tags = { "MenuController" })
     @GetMapping()
     public ResponseEntity getMenu(@RequestParam(defaultValue = "") String category){
         List<MenuResponse> menuResponseList = menuService.getMenu(category);
         ResponseMessage responseMessage = new ResponseMessage(200, "커피 메뉴 반환", menuResponseList);
-        return new ResponseEntity(responseMessage, HttpStatusCode.valueOf(responseMessage.getStatusCode()));
+        return new ResponseEntity(responseMessage, HttpStatus.valueOf(responseMessage.getStatusCode()));
     }
 
-    @Operation(summary = "인기메뉴 조회 API", description = "7일간의 인기 메뉴를 조회합니다.", tags = { "MenuController" })
     @GetMapping("/rank")
     public ResponseEntity getRank(){
         List<MenuResponse> menuResponseList = menuService.getRank();
         ResponseMessage responseMessage = new ResponseMessage(200, "인기메뉴 메뉴 반환", menuResponseList);
-        return new ResponseEntity(responseMessage, HttpStatusCode.valueOf(responseMessage.getStatusCode()));
+        return new ResponseEntity(responseMessage, HttpStatus.valueOf(responseMessage.getStatusCode()));
     }
 
 
