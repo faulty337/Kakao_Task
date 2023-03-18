@@ -12,8 +12,15 @@ import com.example.kakao_tesk.repository.OrderRepository;
 import com.example.kakao_tesk.repository.UserRepository;
 import com.example.kakao_tesk.type.PointType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -26,8 +33,32 @@ public class OrderService {
 
     private final PointService pointService;
 
+    private final RedissonClient redissonClient;
 
-    public void payment(PaymentRequest paymentRequest) {
+    private static final int WAIT_TIME = 1;
+    private static final int LEASE_TIME = 2;
+
+    public void orderLock(PaymentRequest paymentRequest){
+        Order order;
+        RLock rlock = redissonClient.getLock(paymentRequest.getUserId().toString());
+        try{
+            if(!(rlock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS))){
+                throw new CustomException(ErrorCode.NOT_FOUND_LOCK);
+            }
+            order = createOrder(paymentRequest);
+
+        } catch (InterruptedException e) {
+            throw new CustomException(ErrorCode.SERVER_ERROR);
+        } finally {
+            rlock.unlock();
+        }
+
+        requestPlatform(order);
+
+    }
+
+    @Transactional
+    public Order createOrder(PaymentRequest paymentRequest) {
         User user = userRepository.findById(paymentRequest.getUserId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
         );
@@ -40,11 +71,17 @@ public class OrderService {
             throw new CustomException(ErrorCode.SHORTAGE_POINT);
         }
 
-        Order order = orderRepository.save(new Order(menu.getPrice(), user, menu));
-
         PointRequest pointRequest = new PointRequest(user.getId(), (long)menu.getPrice());
-
-        pointService.addPointHistory(pointRequest, PointType.USE);
-
+        pointService.payment(pointRequest, PointType.USE);
+        log.info("createOrder");
+        return orderRepository.save(new Order(menu.getPrice(), user, menu));
     }
+
+    public void requestPlatform(Order order){
+        log.info(order.getMenu().getName());
+    }
+
+
+
+
 }
