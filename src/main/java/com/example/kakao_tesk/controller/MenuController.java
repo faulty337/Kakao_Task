@@ -1,6 +1,7 @@
 package com.example.kakao_tesk.controller;
 
 import com.example.kakao_tesk.dto.response.MenuResponse;
+import com.example.kakao_tesk.dto.response.RankResponse;
 import com.example.kakao_tesk.dto.response.ResponseMessage;
 import com.example.kakao_tesk.service.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class MenuController {
 
     @GetMapping("/rank")
     public ResponseEntity getRank(){
-        List<MenuResponse> menuResponseList = menuService.getRank();
+        List<RankResponse> menuResponseList = menuService.getRank();
         ResponseMessage responseMessage = new ResponseMessage(200, "인기메뉴 메뉴 반환", menuResponseList);
         return new ResponseEntity(responseMessage, HttpStatus.valueOf(responseMessage.getStatusCode()));
     }
