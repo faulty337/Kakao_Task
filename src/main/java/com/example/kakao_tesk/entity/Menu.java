@@ -15,7 +15,7 @@ import javax.persistence.Id;
 
 @Entity
 
-@SQLDelete(sql = "UPDATE menu SET status = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE menu SET isDelete = true WHERE id = ?")
 @Getter
 @NoArgsConstructor
 public class Menu {
@@ -33,7 +33,7 @@ public class Menu {
 
     @Getter
     @ColumnDefault("false")
-    private boolean isdelete;
+    private boolean isDelete;
 
     public Menu(String name, Category category, int price) {
         this.name = name;
