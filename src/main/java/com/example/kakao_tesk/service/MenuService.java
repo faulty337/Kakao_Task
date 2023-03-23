@@ -3,7 +3,6 @@ package com.example.kakao_tesk.service;
 import com.example.kakao_tesk.dto.response.MenuResponse;
 import com.example.kakao_tesk.dto.response.RankResponse;
 import com.example.kakao_tesk.entity.Menu;
-import com.example.kakao_tesk.entity.Order;
 import com.example.kakao_tesk.exception.CustomException;
 import com.example.kakao_tesk.exception.ErrorCode;
 import com.example.kakao_tesk.repository.MenuRepository;
@@ -11,14 +10,15 @@ import com.example.kakao_tesk.repository.OrderRepository;
 import com.example.kakao_tesk.type.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.cache.annotation.CacheResult;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,9 +50,19 @@ public class MenuService {
         return menuList.stream().map(menu -> new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getCategory())).toList();
     }
 
-    @Transactional
+
+    @Cacheable("rank")
+    @Transactional(readOnly = true)
     public List<RankResponse> getRank() {
+        log.info("get");
         PageRequest pageRequest = PageRequest.of(0, 3);
+        return orderRepository.findTop3ByCreatedAtAfter(LocalDateTime.now().minusDays(7), pageRequest);
+    }
+
+    @CachePut("rank")
+    public List<RankResponse> setRank(){
+        PageRequest pageRequest = PageRequest.of(0, 3);
+        log.info("set");
         List<RankResponse> rankResponses = orderRepository.findTop3ByCreatedAtAfter(LocalDateTime.now().minusDays(7), pageRequest);
         return rankResponses;
     }
