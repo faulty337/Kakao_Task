@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,15 +55,14 @@ public class MenuService {
     @Cacheable("rank")
     @Transactional(readOnly = true)
     public List<RankResponse> getRank() {
-        log.info("get");
         PageRequest pageRequest = PageRequest.of(0, 3);
         return orderRepository.findTop3ByCreatedAtAfter(LocalDateTime.now().minusDays(7), pageRequest);
     }
 
     @CachePut("rank")
+    @Scheduled(cron = "0 0 0 * * *")
     public List<RankResponse> setRank(){
         PageRequest pageRequest = PageRequest.of(0, 3);
-        log.info("set");
         List<RankResponse> rankResponses = orderRepository.findTop3ByCreatedAtAfter(LocalDateTime.now().minusDays(7), pageRequest);
         return rankResponses;
     }
