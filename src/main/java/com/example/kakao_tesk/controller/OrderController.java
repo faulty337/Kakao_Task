@@ -18,10 +18,9 @@ public class OrderController {
 
     private final OrderService orderService;
 
-
     @PostMapping
     public ResponseEntity ResponseEntity(@RequestBody PaymentRequest paymentRequest){
-        orderService.createOrder(paymentRequest);
+        orderService.createOrder(paymentRequest.getUserId(), paymentRequest.getManuId());
 
         ResponseMessage responseMessage = new ResponseMessage(200, "주문이 완료되었습니다.");
 

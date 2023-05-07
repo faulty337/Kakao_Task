@@ -1,4 +1,4 @@
-package com.example.kakao_tesk.config;
+package com.example.kakao_tesk.common.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
